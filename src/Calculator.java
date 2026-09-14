@@ -41,6 +41,18 @@ public class Calculator {
         currentValue -= number;
     }
 
+    private static void multiply(double number) {
+        currentValue *= number;
+    }
+
+    private static void divide(double number) {
+        if (number == 0) {
+            System.out.println("Ошибка: деление на ноль. Текущий результат не изменён.");
+            return;
+        }
+        currentValue /= number;
+    }
+
     private static void executeOperation(String operation) {
         switch (operation) {
             case "+":
@@ -52,6 +64,22 @@ public class Calculator {
                 double subtrahend = toNumber(input("Введите число: "));
                 subtract(subtrahend);
                 output();
+                break;
+            case "*":
+                double multiplier = toNumber(input("Введите число: "));
+                multiply(multiplier);
+                output();
+                break;
+            case "/":
+                double divisor = toNumber(input("Введите число: "));
+                divide(divisor);
+                output();
+                break;
+            case "C":
+            case "c":
+                reset();
+                output();
+                currentValue = toNumber(input("Введите число: "));
                 break;
             case "S":
             case "s":
@@ -69,7 +97,7 @@ public class Calculator {
         currentValue = toNumber(input("Введите число: "));
 
         while (isRunning) {
-            String operation = input("Введите операцию: +, -, S — выход");
+            String operation = input("Введите операцию: +, -, *, /, C — сброс, S — выход");
             executeOperation(operation);
         }
 
