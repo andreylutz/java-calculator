@@ -4,6 +4,7 @@ public class Calculator {
     private static final Scanner scanner = new Scanner(System.in);
     private static double currentValue = 0;
     private static boolean isRunning = false;
+    private static boolean hasResult = false;
 
     public static void main(String[] args) {
         run();
@@ -13,24 +14,29 @@ public class Calculator {
         return Double.parseDouble(value);
     }
 
+    private static String formatNumber(double number) {
+        if (number == (long) number) {
+            return Long.toString((long) number);
+        }
+        return Double.toString(number);
+    }
+
     private static String input(String message) {
-        System.out.println(message);
+        System.out.print(message);
         return scanner.next();
     }
 
-    private static void output() {
-        System.out.println("Результат: ");
-
-        if (currentValue == (long) currentValue) {
-            System.out.println((long) currentValue);
-            return;
-        }
-
-        System.out.println(currentValue);
+    private static void output(double firstNumber, String operation, double secondNumber) {
+        System.out.println();
+        System.out.println(formatNumber(firstNumber) + " " + operation + " "
+                + formatNumber(secondNumber) + " = " + formatNumber(currentValue));
+        System.out.println();
+        hasResult = true;
     }
 
     private static void reset() {
         currentValue = 0;
+        hasResult = false;
     }
 
     private static void sum(double number) {
@@ -54,32 +60,35 @@ public class Calculator {
     }
 
     private static void executeOperation(String operation) {
+        double firstNumber = currentValue;
         switch (operation) {
             case "+":
-                double number = toNumber(input("Введите число: "));
+                double number = toNumber(input("Число: "));
                 sum(number);
-                output();
+                output(firstNumber, operation, number);
                 break;
             case "-":
-                double subtrahend = toNumber(input("Введите число: "));
+                double subtrahend = toNumber(input("Число: "));
                 subtract(subtrahend);
-                output();
+                output(firstNumber, operation, subtrahend);
                 break;
             case "*":
-                double multiplier = toNumber(input("Введите число: "));
+                double multiplier = toNumber(input("Число: "));
                 multiply(multiplier);
-                output();
+                output(firstNumber, operation, multiplier);
                 break;
             case "/":
-                double divisor = toNumber(input("Введите число: "));
+                double divisor = toNumber(input("Число: "));
                 divide(divisor);
-                output();
+                if (divisor != 0) {
+                    output(firstNumber, operation, divisor);
+                }
                 break;
             case "C":
             case "c":
                 reset();
-                output();
-                currentValue = toNumber(input("Введите число: "));
+                System.out.println("Результат сброшен: 0");
+                currentValue = toNumber(input("Число: "));
                 break;
             case "S":
             case "s":
@@ -94,10 +103,13 @@ public class Calculator {
 
     private static void run() {
         isRunning = true;
-        currentValue = toNumber(input("Введите число: "));
+        currentValue = toNumber(input("Число: "));
 
         while (isRunning) {
-            String operation = input("Введите операцию: +, -, *, /, C — сброс, S — выход");
+            String message = hasResult
+                    ? "Продолжить с " + formatNumber(currentValue) + " (+, -, *, /), сбросить (C) или выйти (S): "
+                    : "Операция: ";
+            String operation = input(message);
             executeOperation(operation);
         }
 
