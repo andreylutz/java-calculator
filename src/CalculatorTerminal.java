@@ -10,8 +10,15 @@ public class CalculatorTerminal {
         new CalculatorTerminal().run();
     }
 
-    private double toNumber(String value) {
-        return Double.parseDouble(value);
+    private double readNumber() {
+        while (true) {
+            String value = input("Число: ");
+            try {
+                return Double.parseDouble(value);
+            } catch (NumberFormatException exception) {
+                System.out.println("Неизвестное число");
+            }
+        }
     }
 
     private String formatNumber(double number) {
@@ -37,25 +44,25 @@ public class CalculatorTerminal {
         double firstNumber = calculator.getCurrentValue();
         switch (operation) {
             case "+":
-                double number = toNumber(input("Число: "));
+                double number = readNumber();
                 calculator.sum(number);
                 hasResult = true;
                 output(firstNumber, operation, number);
                 break;
             case "-":
-                double subtrahend = toNumber(input("Число: "));
+                double subtrahend = readNumber();
                 calculator.subtract(subtrahend);
                 hasResult = true;
                 output(firstNumber, operation, subtrahend);
                 break;
             case "*":
-                double multiplier = toNumber(input("Число: "));
+                double multiplier = readNumber();
                 calculator.multiply(multiplier);
                 hasResult = true;
                 output(firstNumber, operation, multiplier);
                 break;
             case "/":
-                double divisor = toNumber(input("Число: "));
+                double divisor = readNumber();
                 if (calculator.divide(divisor)) {
                     hasResult = true;
                     output(firstNumber, operation, divisor);
@@ -68,7 +75,7 @@ public class CalculatorTerminal {
                 calculator.reset();
                 hasResult = false;
                 System.out.println("Результат сброшен: 0");
-                calculator.setCurrentValue(toNumber(input("Число: ")));
+                calculator.setCurrentValue(readNumber());
                 break;
             case "S":
             case "s":
@@ -76,14 +83,14 @@ public class CalculatorTerminal {
                 break;
 
             default:
-                System.out.println("Неизвестная операция.");
+                System.out.println("Неизвестная операция");
                 break;
         }
     }
 
     private void run() {
         isRunning = true;
-        calculator.setCurrentValue(toNumber(input("Число: ")));
+        calculator.setCurrentValue(readNumber());
 
         while (isRunning) {
             String message = hasResult
