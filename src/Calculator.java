@@ -37,6 +37,10 @@ public class Calculator {
         currentValue += number;
     }
 
+    private static void subtract(double number) {
+        currentValue -= number;
+    }
+
     private static void executeOperation(String operation) {
         switch (operation) {
             case "+":
@@ -44,6 +48,16 @@ public class Calculator {
                 sum(number);
                 output();
                 break;
+            case "-":
+                double subtrahend = toNumber(input("Введите число: "));
+                subtract(subtrahend);
+                output();
+                break;
+            case "S":
+            case "s":
+                isRunning = false;
+                break;
+
             default:
                 System.out.println("Неизвестная операция.");
                 break;
@@ -55,7 +69,7 @@ public class Calculator {
         currentValue = toNumber(input("Введите число: "));
 
         while (isRunning) {
-            String operation = input("Введите операцию: +");
+            String operation = input("Введите операцию: +, -, S — выход");
             executeOperation(operation);
         }
 
